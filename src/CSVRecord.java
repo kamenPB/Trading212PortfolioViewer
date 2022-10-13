@@ -1,6 +1,4 @@
 
-import java.sql.Timestamp;
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -13,16 +11,16 @@ import java.sql.Timestamp;
 public class CSVRecord {
     
     String action;
-    Timestamp timestamp;
+    String date;
     String ticker;
     String name;
-    double numberOfShares;
-    double pricePerShare;
+    Double numberOfShares;
+    Double pricePerShare;
     String currency;
-    double exchangeRate;
-    double result;
-    double totalCost;
-    double currencyConverstionFee;
+    Double exchangeRate;
+    Double result;
+    Double totalCost;
+    Double currencyConverstionFee;
 
     public String getAction() {
         return action;
@@ -32,12 +30,12 @@ public class CSVRecord {
         this.action = action;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
+    public String getDate() {
+        return date;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getTicker() {
@@ -56,19 +54,19 @@ public class CSVRecord {
         this.name = name;
     }
 
-    public double getNumberOfShares() {
+    public Double getNumberOfShares() {
         return numberOfShares;
     }
 
-    public void setNumberOfShares(double numberOfShares) {
+    public void setNumberOfShares(Double numberOfShares) {
         this.numberOfShares = numberOfShares;
     }
 
-    public double getPricePerShare() {
+    public Double getPricePerShare() {
         return pricePerShare;
     }
 
-    public void setPricePerShare(double pricePerShare) {
+    public void setPricePerShare(Double pricePerShare) {
         this.pricePerShare = pricePerShare;
     }
 
@@ -80,35 +78,35 @@ public class CSVRecord {
         this.currency = currency;
     }
 
-    public double getExchangeRate() {
+    public Double getExchangeRate() {
         return exchangeRate;
     }
 
-    public void setExchangeRate(double exchangeRate) {
+    public void setExchangeRate(Double exchangeRate) {
         this.exchangeRate = exchangeRate;
     }
 
-    public double getResult() {
+    public Double getResult() {
         return result;
     }
 
-    public void setResult(double result) {
+    public void setResult(Double result) {
         this.result = result;
     }
 
-    public double getTotalCost() {
+    public Double getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(double totalCost) {
+    public void setTotalCost(Double totalCost) {
         this.totalCost = totalCost;
     }
 
-    public double getCurrencyConverstionFee() {
+    public Double getCurrencyConverstionFee() {
         return currencyConverstionFee;
     }
 
-    public void setCurrencyConverstionFee(double currencyConverstionFee) {
+    public void setCurrencyConverstionFee(Double currencyConverstionFee) {
         this.currencyConverstionFee = currencyConverstionFee;
     }
     

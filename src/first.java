@@ -1,9 +1,11 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /*
@@ -96,15 +98,42 @@ public class first extends javax.swing.JFrame {
             inputTrading212CSVFile = file_chooser.getSelectedFile();
             try {
                 scanner = new Scanner(inputTrading212CSVFile);
+                scanner.nextLine();
             } catch (FileNotFoundException ex) {
                 uploadMessage.setText("File not found.");
             }
             uploadMessage.setText("File import successful.");
             
             // start uploading the records to the CSVRecords
+            ArrayList<CSVRecord> csvRecords = new ArrayList<>();
             while (scanner.hasNextLine()) {
-                System.out.println(scanner.nextLine());
+                String line = scanner.nextLine();
+                Object lineValues[] = line.split(",");
+                CSVRecord csvRecord = new CSVRecord();
+                csvRecord.setAction(lineValues[0].toString());
+                csvRecord.setDate(lineValues[1].toString());
+                csvRecord.setTicker(lineValues[3].toString());
+                csvRecord.setName(lineValues[4].toString());
+                csvRecord.setNumberOfShares(Double.parseDouble(lineValues[5].toString()));
+                csvRecord.setPricePerShare(Double.parseDouble(lineValues[6].toString()));
+                csvRecord.setCurrency(lineValues[7].toString());
+                csvRecord.setExchangeRate(Double.parseDouble(lineValues[8].toString()));
+                if (!lineValues[9].equals("")) {
+                    csvRecord.setResult(Double.parseDouble(lineValues[9].toString()));
+                } else {
+                    csvRecord.setResult(null);
+                }
+                csvRecord.setTotalCost(Double.parseDouble(lineValues[10].toString()));
+                if (lineValues.length == 13) {
+                    csvRecord.setCurrencyConverstionFee(Double.parseDouble(lineValues[12].toString()));
+                } else {
+                    csvRecord.setCurrencyConverstionFee(null);
+                }
+                csvRecords.add(csvRecord);
             }
+            contentTable.setModel(new ContentTableModel(csvRecords));
+            contentTableModel.fireTableDataChanged();
+            
             
         } else {
            uploadMessage.setText("No file chosen.");

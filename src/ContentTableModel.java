@@ -53,7 +53,7 @@ public class ContentTableModel extends AbstractTableModel{
         
         switch (columnIndex) {
             case 0: return csvRecord.action;
-            case 1: return csvRecord.timestamp;
+            case 1: return csvRecord.date;
             case 2: return csvRecord.ticker;
             case 3: return csvRecord.name;
             case 4: return csvRecord.numberOfShares;
