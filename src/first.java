@@ -23,6 +23,7 @@ public class first extends javax.swing.JFrame {
     private File inputTrading212CSVFile;
     private Scanner scanner;
     private ContentTableModel contentTableModel = new ContentTableModel();
+	private PostgreSQLUtility pgUtil = new PostgreSQLUtility();
     
     /**
      * Creates new form first
@@ -133,7 +134,11 @@ public class first extends javax.swing.JFrame {
             }
             contentTable.setModel(new ContentTableModel(csvRecords));
             contentTableModel.fireTableDataChanged();
-            // test commit change 
+            
+            String tableName = "rawDataFromFile";
+            pgUtil.insertRowsToTable(csvRecords, tableName);
+			pgUtil.truncateTable(tableName);
+            
             
             
         } else {
