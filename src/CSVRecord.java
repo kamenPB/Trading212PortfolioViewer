@@ -20,6 +20,10 @@ public class CSVRecord {
     Double exchangeRate;
     Double result;
     Double totalCost;
+	Double withholdingTax;
+	String withholdingTaxCurrency;
+	Double chargeAmount;
+	Double depositFee;
     Double currencyConverstionFee;
 
     public String getAction() {
@@ -101,6 +105,38 @@ public class CSVRecord {
     public void setTotalCost(Double totalCost) {
         this.totalCost = totalCost;
     }
+	
+	public Double getWithholdingTax() {
+		return withholdingTax;
+	}
+
+	public void setWithholdingTax(Double withholdingTax) {
+		this.withholdingTax = withholdingTax;
+	}
+
+	public String getWithholdingTaxCurrency() {
+		return withholdingTaxCurrency;
+	}
+
+	public void setWithholdingTaxCurrency(String withholdingTaxCurrency) {
+		this.withholdingTaxCurrency = withholdingTaxCurrency;
+	}
+
+	public Double getChargeAmount() {
+		return chargeAmount;
+	}
+
+	public void setChargeAmount(Double chargeAmount) {
+		this.chargeAmount = chargeAmount;
+	}
+
+	public Double getDepositFee() {
+		return depositFee;
+	}
+
+	public void setDepositFee(Double depositFee) {
+		this.depositFee = depositFee;
+	}
 
     public Double getCurrencyConverstionFee() {
         return currencyConverstionFee;

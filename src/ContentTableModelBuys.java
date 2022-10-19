@@ -11,7 +11,7 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author kamen
  */
-public class ContentTableModel extends AbstractTableModel{
+public class ContentTableModelBuys extends AbstractTableModel{
     
     private String columnNames[] = {
         "Action",
@@ -22,18 +22,17 @@ public class ContentTableModel extends AbstractTableModel{
         "Price / share",
         "Currency",
         "Exchange rate",
-        "Result (GBP)",
         "Total cost",
         "Currency converstion fee"
     };
     
     private ArrayList<CSVRecord> csvRecords;
     
-    public ContentTableModel() {
+    public ContentTableModelBuys() {
         csvRecords = new ArrayList<>();
     }
     
-    public ContentTableModel(ArrayList<CSVRecord> csvRecords) {
+    public ContentTableModelBuys(ArrayList<CSVRecord> csvRecords) {
         this.csvRecords = csvRecords;
     }
 
@@ -60,9 +59,8 @@ public class ContentTableModel extends AbstractTableModel{
             case 5: return csvRecord.pricePerShare;
             case 6: return csvRecord.currency;
             case 7: return csvRecord.exchangeRate;
-            case 8: return csvRecord.result;
-            case 9: return csvRecord.totalCost;
-            case 10: return csvRecord.currencyConverstionFee;
+            case 8: return csvRecord.totalCost;
+            case 9: return csvRecord.currencyConverstionFee;
             default: return null;
         }
     }

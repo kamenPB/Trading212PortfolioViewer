@@ -22,9 +22,15 @@ public class first extends javax.swing.JFrame {
     private final JFileChooser file_chooser;
     private File inputTrading212CSVFile;
     private Scanner scanner;
-    private ContentTableModel contentTableModel = new ContentTableModel();
+    private ContentTableModelBuys contentTableModel = new ContentTableModelBuys();
 	private PostgreSQLUtility pgUtil = new PostgreSQLUtility();
     
+	private final ArrayList<CSVRecord> csvBuyRecords = new ArrayList<>();
+	private final ArrayList<CSVRecord> csvSellRecords = new ArrayList<>();
+	private final ArrayList<CSVRecord> csvDepositRecords = new ArrayList<>();
+	private final ArrayList<CSVRecord> csvWithdrawalRecords = new ArrayList<>();
+	private final ArrayList<CSVRecord> csvDividendRecords = new ArrayList<>();
+	
     /**
      * Creates new form first
      */
@@ -49,6 +55,11 @@ public class first extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         contentTable = new javax.swing.JTable();
         uploadMessage = new javax.swing.JLabel();
+        showSellsButton = new javax.swing.JButton();
+        showBuysButton = new javax.swing.JButton();
+        showDeposits = new javax.swing.JButton();
+        showWithdrawals = new javax.swing.JButton();
+        showDividends = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -62,6 +73,41 @@ public class first extends javax.swing.JFrame {
         contentTable.setModel(contentTableModel);
         jScrollPane1.setViewportView(contentTable);
 
+        showSellsButton.setText("Set to Sells");
+        showSellsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showSellsButtonActionPerformed(evt);
+            }
+        });
+
+        showBuysButton.setText("Set to Buys");
+        showBuysButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showBuysButtonActionPerformed(evt);
+            }
+        });
+
+        showDeposits.setText("Set to Deposits");
+        showDeposits.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showDepositsActionPerformed(evt);
+            }
+        });
+
+        showWithdrawals.setText("Set to Withdrawals");
+        showWithdrawals.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showWithdrawalsActionPerformed(evt);
+            }
+        });
+
+        showDividends.setText("Set to Dividends");
+        showDividends.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showDividendsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -72,7 +118,12 @@ public class first extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(uploadMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(uploadeXLSXFileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(uploadeXLSXFileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(showSellsButton)
+                    .addComponent(showBuysButton)
+                    .addComponent(showDeposits)
+                    .addComponent(showWithdrawals)
+                    .addComponent(showDividends))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -84,6 +135,16 @@ public class first extends javax.swing.JFrame {
                         .addComponent(uploadeXLSXFileButton)
                         .addGap(12, 12, 12)
                         .addComponent(uploadMessage)
+                        .addGap(18, 18, 18)
+                        .addComponent(showSellsButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(showBuysButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(showDeposits)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(showWithdrawals)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(showDividends)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE))
                 .addContainerGap())
@@ -106,38 +167,116 @@ public class first extends javax.swing.JFrame {
             uploadMessage.setText("File import successful.");
             
             // start uploading the records to the CSVRecords
-            ArrayList<CSVRecord> csvRecords = new ArrayList<>();
+           
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 Object lineValues[] = line.split(",");
+				
+				// separate cases here
+				// BUY || SELL || DEPOSIT || WITHDRAWAL || DIVIDEND || UNKNOWN
                 CSVRecord csvRecord = new CSVRecord();
-                csvRecord.setAction(lineValues[0].toString());
-                csvRecord.setDate(lineValues[1].toString());
-                csvRecord.setTicker(lineValues[3].toString());
-                csvRecord.setName(lineValues[4].toString());
-                csvRecord.setNumberOfShares(Double.parseDouble(lineValues[5].toString()));
-                csvRecord.setPricePerShare(Double.parseDouble(lineValues[6].toString()));
-                csvRecord.setCurrency(lineValues[7].toString());
-                csvRecord.setExchangeRate(Double.parseDouble(lineValues[8].toString()));
-                if (!lineValues[9].equals("")) {
-                    csvRecord.setResult(Double.parseDouble(lineValues[9].toString()));
-                } else {
-                    csvRecord.setResult(null);
-                }
-                csvRecord.setTotalCost(Double.parseDouble(lineValues[10].toString()));
-                if (lineValues.length == 13) {
-                    csvRecord.setCurrencyConverstionFee(Double.parseDouble(lineValues[12].toString()));
-                } else {
-                    csvRecord.setCurrencyConverstionFee(null);
-                }
-                csvRecords.add(csvRecord);
+				String action = lineValues[0].toString();
+				
+				// BUYS
+				if (action.contains("buy")){
+					csvRecord.setAction(action);
+					csvRecord.setDate(lineValues[1].toString());
+					csvRecord.setTicker(lineValues[3].toString());
+					csvRecord.setName(lineValues[4].toString());
+					csvRecord.setNumberOfShares(Double.parseDouble(lineValues[5].toString()));
+					csvRecord.setPricePerShare(Double.parseDouble(lineValues[6].toString()));
+					csvRecord.setCurrency(lineValues[7].toString());
+					csvRecord.setExchangeRate(Double.parseDouble(lineValues[8].toString()));
+//					if (!lineValues[9].equals("")) {
+//						csvRecord.setResult(Double.parseDouble(lineValues[9].toString()));
+//					} else {
+//						csvRecord.setResult(null);
+//					}
+					csvRecord.setTotalCost(Double.parseDouble(lineValues[10].toString()));
+					// withholding tax 11
+//					if (!lineValues[11].equals("")) {
+//						csvRecord.setWithholdingTax(Double.parseDouble(lineValues[11].toString()));
+//					} else {
+//						csvRecord.setWithholdingTax(null);
+//					}
+//					// withholding tax currency 12
+//					if (!lineValues[12].equals("")) {
+//						csvRecord.setWithholdingTaxCurrency(lineValues[12].toString());
+//					} else {
+//						csvRecord.setWithholdingTaxCurrency(null);
+//					}
+//					// Charge amount 13
+//					if (!lineValues[13].equals("")) {
+//						csvRecord.setChargeAmount(Double.parseDouble(lineValues[13].toString()));
+//					} else {
+//						csvRecord.setChargeAmount(null);
+//					}
+//					// deposit fee 14 
+//					if (!lineValues[14].equals("")) {
+//						csvRecord.setDepositFee(Double.parseDouble(lineValues[14].toString()));
+//					} else {
+//						csvRecord.setDepositFee(null);
+//					}
+					if (lineValues.length == 18) {
+						if (!lineValues[17].toString().equals("")) {
+							csvRecord.setCurrencyConverstionFee(Double.parseDouble(lineValues[17].toString()));
+						} else {
+							csvRecord.setCurrencyConverstionFee(null);
+						}
+					}
+					csvBuyRecords.add(csvRecord);
+				}
+				
+				// SELLS 
+				if (action.contains("sell")){
+					csvRecord.setAction(action);
+					csvRecord.setDate(lineValues[1].toString());
+					csvRecord.setTicker(lineValues[3].toString());
+					csvRecord.setName(lineValues[4].toString());
+					csvRecord.setNumberOfShares(Double.parseDouble(lineValues[5].toString()));
+					csvRecord.setPricePerShare(Double.parseDouble(lineValues[6].toString()));
+					csvRecord.setCurrency(lineValues[7].toString());
+					csvRecord.setExchangeRate(Double.parseDouble(lineValues[8].toString()));
+					csvRecord.setResult(Double.parseDouble(lineValues[9].toString()));
+					csvRecord.setTotalCost(Double.parseDouble(lineValues[10].toString()));
+					// withholding tax 11
+//					if (!lineValues[11].equals("")) {
+//						csvRecord.setWithholdingTax(Double.parseDouble(lineValues[11].toString()));
+//					} else {
+//						csvRecord.setWithholdingTax(null);
+//					}
+//					// withholding tax currency 12
+//					if (!lineValues[12].equals("")) {
+//						csvRecord.setWithholdingTaxCurrency(lineValues[12].toString());
+//					} else {
+//						csvRecord.setWithholdingTaxCurrency(null);
+//					}
+//					// Charge amount 13
+//					if (!lineValues[13].equals("")) {
+//						csvRecord.setChargeAmount(Double.parseDouble(lineValues[13].toString()));
+//					} else {
+//						csvRecord.setChargeAmount(null);
+//					}
+//					// deposit fee 14 
+//					if (!lineValues[14].equals("")) {
+//						csvRecord.setDepositFee(Double.parseDouble(lineValues[14].toString()));
+//					} else {
+//						csvRecord.setDepositFee(null);
+//					}
+					if (lineValues.length == 18) {
+						if (!lineValues[17].toString().equals("")) {
+							csvRecord.setCurrencyConverstionFee(Double.parseDouble(lineValues[17].toString()));
+						} else {
+							csvRecord.setCurrencyConverstionFee(null);
+						}
+					}
+					csvSellRecords.add(csvRecord);
+				}
             }
-            contentTable.setModel(new ContentTableModel(csvRecords));
-            contentTableModel.fireTableDataChanged();
             
             String tableName = "rawDataFromFile";
-            pgUtil.insertRowsToTable(csvRecords, tableName);
 			pgUtil.truncateTable(tableName);
+			pgUtil.insertRowsToTable(csvBuyRecords, tableName);
             
             
             
@@ -145,6 +284,31 @@ public class first extends javax.swing.JFrame {
            uploadMessage.setText("No file chosen.");
         }
     }//GEN-LAST:event_uploadeXLSXFileButtonActionPerformed
+
+    private void showBuysButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showBuysButtonActionPerformed
+		contentTable.setModel(new ContentTableModelBuys(csvBuyRecords));
+		contentTableModel.fireTableDataChanged();
+    }//GEN-LAST:event_showBuysButtonActionPerformed
+
+    private void showSellsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showSellsButtonActionPerformed
+        contentTable.setModel(new ContentTableModelSells(csvSellRecords));
+		contentTableModel.fireTableDataChanged();
+    }//GEN-LAST:event_showSellsButtonActionPerformed
+
+    private void showDepositsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showDepositsActionPerformed
+        contentTable.setModel(new ContentTableModelBuys(csvDepositRecords));
+		contentTableModel.fireTableDataChanged();
+    }//GEN-LAST:event_showDepositsActionPerformed
+
+    private void showWithdrawalsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showWithdrawalsActionPerformed
+        contentTable.setModel(new ContentTableModelBuys(csvWithdrawalRecords));
+		contentTableModel.fireTableDataChanged();
+    }//GEN-LAST:event_showWithdrawalsActionPerformed
+
+    private void showDividendsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showDividendsActionPerformed
+        contentTable.setModel(new ContentTableModelBuys(csvDividendRecords));
+		contentTableModel.fireTableDataChanged();
+    }//GEN-LAST:event_showDividendsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -186,6 +350,11 @@ public class first extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable contentTable;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton showBuysButton;
+    private javax.swing.JButton showDeposits;
+    private javax.swing.JButton showDividends;
+    private javax.swing.JButton showSellsButton;
+    private javax.swing.JButton showWithdrawals;
     private javax.swing.JLabel uploadMessage;
     private javax.swing.JButton uploadeXLSXFileButton;
     // End of variables declaration//GEN-END:variables

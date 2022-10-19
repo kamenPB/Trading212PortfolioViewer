@@ -18,7 +18,7 @@ public class PostgreSQLUtility {
     
     private final String postgresURL = "jdbc:postgresql://trading212.cib8wneubxyv.eu-west-2.rds.amazonaws.com:5432/postgres";
     private final String username = "postgresAdmin";
-    private final String password = null;
+    private final String password = "Monika94!!";
 	private final String schemaName = "trading212";
     
     public Connection getPostgreSQLConnection () {
@@ -36,7 +36,7 @@ public class PostgreSQLUtility {
 	public void insertRowsToTable (ArrayList<CSVRecord> csvRecords, String tableName) {
 		
 		Connection conn = getPostgreSQLConnection();
-		String sqlPrepStmntString = "insert into " + schemaName + "." + tableName + " values (?,?,?,?,?,?,?,?,?,?,?)";
+		String sqlPrepStmntString = "insert into " + schemaName + "." + tableName + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		
 		try {
 			PreparedStatement prepStmnt = conn.prepareStatement(sqlPrepStmntString);
@@ -52,9 +52,13 @@ public class PostgreSQLUtility {
 				prepStmnt.setObject(8, record.getExchangeRate());
 				prepStmnt.setObject(9, record.getResult());
 				prepStmnt.setObject(10, record.getTotalCost());
-				prepStmnt.setObject(11, record.getCurrencyConverstionFee());
+				prepStmnt.setObject(11, record.getWithholdingTax());
+				prepStmnt.setObject(12, record.getWithholdingTaxCurrency());
+				prepStmnt.setObject(13, record.getChargeAmount());
+				prepStmnt.setObject(14, record.getDepositFee());
+				prepStmnt.setObject(15, record.getCurrencyConverstionFee());
 				
-				prepStmnt.executeUpdate();
+				if (record.getAction().contains("buy")) prepStmnt.executeUpdate();
 			}
 		} catch (SQLException e) {
 			System.out.println("Unable to execute statement. " + e.getMessage());

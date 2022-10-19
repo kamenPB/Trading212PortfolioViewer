@@ -30,6 +30,11 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="uploadMessage" min="-2" pref="140" max="-2" attributes="0"/>
                   <Component id="uploadeXLSXFileButton" min="-2" pref="146" max="-2" attributes="0"/>
+                  <Component id="showSellsButton" min="-2" max="-2" attributes="0"/>
+                  <Component id="showBuysButton" min="-2" max="-2" attributes="0"/>
+                  <Component id="showDeposits" min="-2" max="-2" attributes="0"/>
+                  <Component id="showWithdrawals" min="-2" max="-2" attributes="0"/>
+                  <Component id="showDividends" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -44,6 +49,16 @@
                       <Component id="uploadeXLSXFileButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                       <Component id="uploadMessage" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="showSellsButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="showBuysButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="showDeposits" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="showWithdrawals" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="showDividends" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
                   <Component id="jScrollPane1" pref="468" max="32767" attributes="0"/>
@@ -85,6 +100,46 @@
       </SubComponents>
     </Container>
     <Component class="javax.swing.JLabel" name="uploadMessage">
+    </Component>
+    <Component class="javax.swing.JButton" name="showSellsButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Set to Sells"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showSellsButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="showBuysButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Set to Buys"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showBuysButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="showDeposits">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Set to Deposits"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showDepositsActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="showWithdrawals">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Set to Withdrawals"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showWithdrawalsActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="showDividends">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Set to Dividends"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showDividendsActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
